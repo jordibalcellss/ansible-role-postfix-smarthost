@@ -1,0 +1,10 @@
+---
+- name: Reload postfix
+  service:
+    name: postfix
+    state: reloaded
+  listen: "Reload and send"
+
+- name: Send test email
+  shell: 'echo "This is a test." | mail -r {{ smtp.user }} -s "Testing the MTA" {{ test_rcpt }}'
+  listen: "Reload and send"

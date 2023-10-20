@@ -1,0 +1,46 @@
+---
+- name: Install packages
+  yum:
+    name:
+      - postfix
+      - cyrus-sasl-plain
+      - mailx
+      - mutt
+    state: present
+
+- name: Edit config file
+  blockinfile:
+    path: /etc/postfix/main.cf
+    block: |
+      myhostname = {{ hostname }}
+      relayhost = [{{ smtp_server }}]:{{ smtp_port }}
+      smtp_use_tls = yes
+      smtp_sasl_auth_enable = yes
+      smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+      smtp_tls_CAfile = /etc/ssl/certs/ca-bundle.crt
+      smtp_sasl_security_options = noanonymous
+      smtp_sasl_tls_security_options = noanonymous
+      maillog_file = {{ maillog }}
+  notify: Reload and send
+
+- name: Edit Postfix SMTP authentication file
+  template:
+    src: sasl_passwd.j2
+    dest: /etc/postfix/sasl_passwd
+    owner: root
+    group: postfix
+    mode: 0640
+  register: sasl_passwd
+  notify: Reload and send
+
+- name: Generate the postmap file
+  shell: "postmap /etc/postfix/sasl_passwd"
+  when: sasl_passwd.changed
+
+- name: Create roots .muttrc file
+  template:
+    src: muttrc.j2
+    dest: "{{ mutt_rc_path }}"
+    owner: "{{ mutt_rc_owner }}"
+    group: "{{ mutt_rc_owner }}"
+  when: mutt_create_muttrc

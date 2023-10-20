@@ -1,0 +1,20 @@
+---
+hostname: artemis.example.com
+
+# Relay settings
+smtp_server: email.example.com
+smtp_port: 587
+smtp_user: smtp_user
+smtp_password: ""
+
+# Shall we need .muttrc?
+mutt_create_muttrc: yes
+
+# Ignore if mutt_create_muttrc: no
+mutt_rc_path: /root/.muttrc
+mutt_rc_owner: root
+mutt_realname: artemis
+mutt_from_user: noreply
+
+# Address for sending a test
+test_rcpt: example@example.com

@@ -1,0 +1,2 @@
+---
+maillog: /var/log/postfix.log
