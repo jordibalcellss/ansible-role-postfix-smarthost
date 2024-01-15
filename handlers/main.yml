@@ -3,8 +3,9 @@
   service:
     name: postfix
     state: reloaded
+  become: true
   listen: "Reload and send"
 
 - name: Send test email
-  shell: 'echo "This is a test." | mail -r {{ smtp.user }} -s "Testing the MTA" {{ test_rcpt }}'
+  shell: 'echo "This is a test." | mail -r {{ smtp_user }} -s "Testing the MTA" {{ test_rcpt }}'
   listen: "Reload and send"

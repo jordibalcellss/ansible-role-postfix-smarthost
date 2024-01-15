@@ -1,2 +1,6 @@
-set realname="{{ mutt_realname }}"
-set from="{{ mutt_from_user }}@{{ hostname }}"
+set realname="{{ ansible_facts.hostname }}"
+{% if mutt_use_fqdn %}
+set from="{{ mutt_from_user }}@{{ ansible_facts.hostname }}.{{ domain }}"
+{% else %}
+set from="{{ mutt_from_user }}@{{ domain }}"
+{% endif %}

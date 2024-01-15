@@ -4,23 +4,30 @@
     name:
       - postfix
       - cyrus-sasl-plain
-      - mailx
+      - s-nail
       - mutt
     state: present
+  become: true
+
+- name: Enable and start postfix
+  service:
+    name: postfix
+    state: started
+    enabled: true
+  become: true
 
 - name: Edit config file
   blockinfile:
     path: /etc/postfix/main.cf
     block: |
-      myhostname = {{ hostname }}
+      myhostname = {{ ansible_facts.hostname }}.{{ domain }}
       relayhost = [{{ smtp_server }}]:{{ smtp_port }}
       smtp_use_tls = yes
       smtp_sasl_auth_enable = yes
       smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
-      smtp_tls_CAfile = /etc/ssl/certs/ca-bundle.crt
       smtp_sasl_security_options = noanonymous
       smtp_sasl_tls_security_options = noanonymous
-      maillog_file = {{ maillog }}
+  become: true
   notify: Reload and send
 
 - name: Edit Postfix SMTP authentication file
@@ -31,16 +38,17 @@
     group: postfix
     mode: 0640
   register: sasl_passwd
+  become: true
   notify: Reload and send
 
 - name: Generate the postmap file
   shell: "postmap /etc/postfix/sasl_passwd"
+  become: true
   when: sasl_passwd.changed
 
 - name: Create roots .muttrc file
   template:
     src: muttrc.j2
     dest: "{{ mutt_rc_path }}"
-    owner: "{{ mutt_rc_owner }}"
-    group: "{{ mutt_rc_owner }}"
-  when: mutt_create_muttrc
+  become: true
+  when: mutt_create_roots_muttrc

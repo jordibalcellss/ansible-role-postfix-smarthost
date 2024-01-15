@@ -1,13 +1,13 @@
 # ansible-role-postfix-smarthost
 
-An Ansible role that installs and configures an authenticated relay (smarthost)
-with [Postfix](https://www.postfix.org/) under RHEL/CentOS.
+An Ansible role that installs and configures an authenticated relay with
+[Postfix](https://www.postfix.org/) under RHEL.
 
 ## Description
 
-Quite often we are not running a suitable email server and would like to use a
-relay instead. Its implementation with Postfix can be easily deployed using
-Ansible.
+Quite often we I find myself not running a suitable email server and would like
+to use a relay instead. Its implementation with Postfix can be easily deployed
+using Ansible.
 
 The SMTP relay settings can be configured in `vars/main.yml`. The
 [Mutt](http://www.mutt.org/) email client is also installed by default and
@@ -16,6 +16,8 @@ headers.
 
 The configuration is tested using a handler that runs the `mail` program to
 send an email to `test_rcpt`.
+
+Tested under AlmaLinux 9.
 
 ## Example playbook
 

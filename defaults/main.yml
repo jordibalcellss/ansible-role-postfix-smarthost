@@ -1,2 +1,2 @@
 ---
-maillog: /var/log/postfix.log
+mutt_rc_path: /root/.muttrc
